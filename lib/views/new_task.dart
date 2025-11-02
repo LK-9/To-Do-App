@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:todo/utilities/constants.dart';
+import 'package:todo/models/task.dart';
+import 'package:todo/models/task_data.dart';
+import 'package:provider/provider.dart';
 
-class NewTask extends StatefulWidget {
-  const NewTask({super.key, required this.addtaskCallback});
-
-  final Function addtaskCallback;
-
-  @override
-  State<NewTask> createState() => _NewTaskState();
-}
-
-class _NewTaskState extends State<NewTask> {
-  String newTaskTitle = "";
+class NewTask extends StatelessWidget {
+  NewTask({super.key});
 
   @override
   Widget build(BuildContext context) {
+    String? newTaskTitle;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -62,7 +57,13 @@ class _NewTaskState extends State<NewTask> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                widget.addtaskCallback(newTaskTitle);
+                if (newTaskTitle != null && newTaskTitle!.isNotEmpty) {
+                  Provider.of<TaskData>(
+                    context,
+                    listen: false,
+                  ).addTask(newTaskTitle!);
+                  Navigator.pop(context);
+                }
               },
               style: ButtonStyle(
                 shape: WidgetStatePropertyAll(
